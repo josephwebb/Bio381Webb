@@ -1,0 +1,12 @@
+---
+title: "MySite"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+New Webite >test<
+
+Link to [this page](newpage.html)
