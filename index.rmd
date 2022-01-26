@@ -1,5 +1,5 @@
 ---
-title: "MySite"
+title: "Joe Webb"
 output: html_document
 ---
 
@@ -7,6 +7,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-New Webite >test<
+Welcome to my homepage! From here you may find links to other assignments for Bio381.
 
-Link to [this page](newpage.html)
+Link to [NewPage](newpage.html)
+
+Link to [Homework 02](Homework_02.html)
