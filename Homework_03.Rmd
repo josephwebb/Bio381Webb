@@ -1,0 +1,183 @@
+---
+title: "Homework_03"
+author: "Joe Webb"
+date: "2/2/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The following answers are the solutions to the Homework 3 Prompts. Completed in Lab by Joe Webb. 
+
+## Question 1
+**Prompt:**
+```
+First String    Second      1.22      3.4
+Second          More Text   1.555555  2.2220
+Third           x           3         124
+```
+**Intended Answer:**
+```
+First String,Second,1.22,3.4
+Second,More Text,1.555555,2.2220
+Third,x,3,124
+```
+**Solution:**
+```
+Find: 
+(\w+\s\w+|\w+)\s*(\w+\s\w+|\w+)\s*(\d\.\d+|\d+)\s*(\d\.\d+|\d+)
+
+Replace: 
+\1,\2,\3,\4
+```
+Solution for Question 1 using a combination of wildcards and multipliers.
+
+
+## Question 2
+**Prompt:**
+```
+Ballif, Bryan, University of Vermont
+Ellison, Aaron, Harvard Forest
+Record, Sydne, Bryn Mawr
+```
+**Intended Answer:**
+```
+Bryan Ballif (University of Vermont)
+Aaron Ellison (Harvard Forest)
+Sydne Record (Bryn Mawr)
+```
+**Solution:**
+```
+Find: 
+(\w+),\s(\w+),\s(\w+.\w+.\w.+)
+
+Replace: 
+\2 \1 (\3)
+```
+Solution for Question 2 using a combination of wildcards, multipliers, and additional characters.
+
+
+## Question 3
+**Prompt:**
+```
+0001 Georgia Horseshoe.mp3 0002 Billy In The Lowground.mp3 0003 Cherokee Shuffle.mp3 0004 Walking Cane.mp3
+```
+**Intended Answer:**
+```
+0001 Georgia Horseshoe.mp3
+0002 Billy In The Lowground.mp3
+0003 Cherokee Shuffle.mp3
+0004 Walking Cane.mp3
+```
+**Solution:**
+```
+Find: 
+(\.\w+)\s
+
+Replace: 
+\1\n
+```
+Solution for Question 3 using a combination of wildcards, multipliers, and additional characters, specifically looking for the .mp3 ending, and creating a new line after its space.
+
+## Question 4
+**Prompt:**
+```
+0001 Georgia Horseshoe.mp3
+0002 Billy In The Lowground.mp3
+0003 Cherokee Shuffle.mp3
+0004 Walking Cane.mp3
+```
+**Intended Answer:**
+```
+Georgia Horseshoe_0001.mp3
+Billy In The Lowground_0002.mp3
+Cherokee Shuffle_0003.mp3
+Walking Cane_0004.mp3
+```
+**Solution:**
+```
+Find: 
+(\d{4})\s(.+)(\.mp3)
+
+Replace: 
+\2_\1\3
+```
+Solution for Question 4 using a combination of wildcards, multipliers, and additional characters.
+
+
+## Question 5
+**Prompt:**
+```
+Camponotus,pennsylvanicus,10.2,44
+Camponotus,herculeanus,10.5,3
+Myrmica,punctiventris,12.2,4
+Lasius,neoniger,3.3,55
+```
+**Intended Answer:**
+```
+C_pennsylvanicus,44
+C_herculeanus,3
+M_punctiventris,4
+L_neoniger,55
+```
+**Solution:**
+```
+Find: 
+(\w)\w+,(\w+),\d+\.\d,(\d+)
+
+Replace: 
+\1_\2,\3
+```
+Solution for Question 5 using a combination of wildcards, multipliers, and additional characters.
+
+## Question 6
+**Prompt:**
+```
+Camponotus,pennsylvanicus,10.2,44
+Camponotus,herculeanus,10.5,3
+Myrmica,punctiventris,12.2,4
+Lasius,neoniger,3.3,55
+```
+**Intended Answer:**
+```
+C_penn,44
+C_herc,3
+M_punc,4
+L_neon,55
+```
+**Solution:**
+```
+Find: 
+(\w)\w+,(\w{4})\w+,\d+\.\d,(\d+)
+
+Replace: 
+\1_\2,\3
+```
+Solution for Question 6 using a combination of wildcards, multipliers, and additional characters.
+
+## Question 7
+**Prompt:**
+```
+Camponotus,pennsylvanicus,10.2,44
+Camponotus,herculeanus,10.5,3
+Myrmica,punctiventris,12.2,4
+Lasius,neoniger,3.3,55
+```
+**Intended Answer:**
+```
+Campen, 44, 10.2
+Camher, 3, 10.5
+Myrpun, 4, 12.2
+Lasneo, 55, 3.3
+```
+**Solution:**
+```
+Find: 
+(\w{3})\w+,(\w{3})\w+,(\d+\.\d),(\d+)
+
+Replace: 
+\1\2, \4, \3
+```
+Solution for Question 7 using a combination of wildcards, multipliers, and additional characters.
