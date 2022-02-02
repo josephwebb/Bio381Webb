@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Return to [Home Page](index.html)
+
 The following answers are the solutions to the Homework 3 Prompts. Completed in Lab by Joe Webb. 
 
 ## Question 1

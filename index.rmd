@@ -7,8 +7,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Welcome to my homepage! From here you may find links to other assignments for Bio381.
+Welcome to my homepage! From here you may find links to my assignments for Professor Gotelli's: Bio381: Computational Biology.
 
 Link to [NewPage](newpage.html)
 
 Link to [Homework 02](Homework_02.html)
+
+Link to [Homework 03](Homework_03.html)
