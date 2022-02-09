@@ -7,6 +7,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-[Home Page](index.html)
+Return to [Home Page](index.html)
 
 See! I do know how to link different pages together!

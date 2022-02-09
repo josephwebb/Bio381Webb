@@ -1,0 +1,159 @@
+---
+title: "Homework_04"
+author: "Joe Webb"
+date: "2/9/2022"
+output: html_document
+---
+Return to [Home Page](index.html)
+
+# Question 1
+Suppose x = 1.1, a = 2.2, and b = 3.3. Assign each expression to the value of the variable z and print the value stored in z.
+
+```{r}
+x <- 1.1
+a <- 2.2
+b <- 3.3
+```
+
+### 1a
+```{r}
+q1a<-x^a^b
+print(q1a)
+```
+
+### 1b
+```{r}
+q1b<-(x^a)^b
+print(q1b)
+```
+
+### 1c
+```{r}
+q1c<-3*x^3+2*x^2+1
+print(q1c)
+```
+
+
+# Question 2
+Using the `rep` and `seq` functions, create the following vectors:
+
+### 2a
+(1,2,3,4,5,6,7,8,7,6,5,4,3,2,1)
+```{r}
+q2b<-c(seq(from = 1, to = 8, by = 1), seq(from = 7, to = 1))
+print(q2b)
+```
+
+### 2b
+(1,2,2,3,3,3,4,4,4,4,5,5,5,5,5)
+```{r}
+q2b<-c(1,rep(2, 2), rep(3,3), rep(4, 4), rep(5,5))
+print(q2b)
+
+```
+
+### 2c
+(5,4,4,3,3,3,2,2,2,2,1,1,1,1,1)
+```{r}
+q2c<-c(5, rep(4,2), rep(3,3), rep(2,4), rep(1,5))
+print(q2c)
+
+```
+
+# Question 3
+Create a vector of two random uniform numbers. In a spatial map, these can be interpreted as x and y coordinates that give the location of an individual (such as a marked forest tree in a plot that has been mapped). Using one of R’s inverse trigonometry functions (asin(), acos(), or atan()), convert these numbers into polar coordinates.
+
+```{r}
+# Generating two random values between 0 and 1
+q3_1<-runif(1) #this will be our x-value
+q3_2<-runif(1) #this will be out y-value
+
+# Plotting two points
+library(ggplot2)
+qplot(x=q3_1,y=q3_2)
+
+# Converting to polar points
+theta<-(atan(q3_2/q3_1)^-1)
+print(theta)
+
+r<-(q3_1^2+q3_2^2)
+print(r)
+
+```
+
+# Question 4
+Create a vector `queue <- c("sheep", "fox", "owl", "ant")` where `queue` represents the animals that are lined up to enter Noah’s Ark, with the sheep at the front of the line. Using R expressions, update `queue` as:
+```{r}
+queue <- c("sheep", "fox", "owl", "ant")
+
+```
+
+### 4a
+the serpent arrives and gets in line;
+```{r}
+q4a<-append(queue, "serpent", after = 5)
+print(q4a)
+
+```
+
+### 4b
+the sheep enters the ark;
+```{r}
+typeof(q4a)
+
+q4b <- q4a[! q4a %in% "sheep"]
+
+print(q4b)
+
+```
+
+### 4c
+the donkey arrives and talks his way to the front of the line;
+```{r}
+q4c<-append(q4b, "donkey", after = 0)
+
+print(q4c)
+
+```
+
+### 4d
+the serpent gets impatient and leaves;
+```{r}
+q4d <- q4c[! q4c %in% "serpent"]
+print(q4d)
+
+```
+
+### 4e
+the owl gets bored and leaves;
+```{r}
+q4e <-q4d[! q4d %in% "owl"]
+print(q4e)
+
+```
+
+### 4f
+the aphid arrives and the ant invites him to cut in line.
+```{r}
+q4f<- append(q4e, "aphid", after = 2)
+print(q4f)
+
+```
+
+### 4g
+Finally, determine the position of the aphid in the line.
+
+```{r}
+which(q4f=="aphid")
+
+```
+
+# Question 5
+Use R to create a vector of all of the integers from 1 to 100 that are not divisible by 2, 3, or 7.
+
+```{r}
+vector <- (1:100)
+q5<-which(vector %%2!=0 & vector %%3!=0 & vector %%7!=0)
+
+print(q5)
+```
