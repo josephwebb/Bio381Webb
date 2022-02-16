@@ -1,0 +1,132 @@
+---
+title: "Homework_05"
+author: "Joe Webb"
+date: "2/16/2022"
+output: html_document
+---
+Return to [Home Page](index.html)
+
+For this lab, students explored the creation and alteration of **Matrices**, **Lists**, and **Data Frames**. The following work was completed in lab, and the output is posted as appropriate. 
+
+## Question 1
+Creating and messing around with a randomly generated matrix.
+
+**Assign a random integer from 3 to 10 as`n_dims`.**
+```{r setup, include=TRUE}
+n_dims <- sample(3:10,1) 
+print(n_dims)
+```
+
+**Creating a matrix from the pregenerated integer.**
+```{r, include=TRUE}
+# Create a vector from 1 to `n_dims^2`
+vector <- c(1:n_dims^2) 
+
+# Shuffle the vector's values
+shuffled_vector <- sample(vector)
+
+# Create a square matrix using the shuffled vector
+matrix <- matrix(data=shuffled_vector, nrow=n_dims, ncol=n_dims, byrow=FALSE)
+print(matrix)
+
+# Transpose the matrix
+trans_matrix <- t(matrix) 
+print(trans_matrix) 
+```
+Transposing the matrix, flipped the `matrix` along its diagnol axis. 
+
+**Extract statistical data from the matrix.**
+```{r, include=TRUE}
+# Name the matrix
+rownames(trans_matrix) <- letters[1:n_dims]
+colnames(trans_matrix) <- LETTERS[1:n_dims]
+print(trans_matrix)
+
+# Sum and mean the first and last row
+# First Row
+rowSums(trans_matrix)[1]
+rowMeans(trans_matrix)[1]
+
+# Last Row
+rowSums(trans_matrix)[n_dims]
+rowMeans(trans_matrix)[n_dims]
+```
+
+**Applying `eigen()` to the generated matrix.**
+```{r, include=TRUE}
+# Eigen
+eigenmatrix <- eigen(trans_matrix)
+print(eigenmatrix)
+
+# Checking the typeof the retrieved Eeigen values.
+print(typeof(eigenmatrix$values))
+print(typeof(eigenmatrix$vectors))
+```
+
+
+## Question 2
+**Creating a list to adapt and combine. **
+```{r, include=TRUE}
+# Creating a 4x4 matrix of random, uniform values
+my_data <- runif(1:16)
+my_matrix <- matrix(data=my_data, nrow=4, ncol=4, byrow=TRUE)
+print(my_matrix)
+
+# Creating a 100-Element Vector of True or False values
+my_double <- runif(1:100)
+head(my_double)
+
+my_logical <- my_double < 0.5
+head(my_logical)
+
+# Creating a 26-element long vector or lower-case letters in random order
+lowercase <- letters
+my_letters <- sample(letters)
+head(my_letters)
+
+# Create a new list, which has the element[2,2] from the matrix, the second element of the logical vector, and the second element of the letters vector.
+my_list <- list((my_matrix[2,2]), my_logical[2], my_letters[2])
+print(my_list)
+
+# Check the typeof each value in the list
+print(my_list)
+typeof(my_list[[1]])
+typeof(my_list[[2]])
+typeof(my_list[[3]])
+
+# Take the list and create a vector with it.
+new_vector <- unlist(my_list)
+print(new_vector)
+
+# What type is the vector?
+print(typeof(new_vector))
+```
+
+## Question 3
+**Creating a data set with letters and random uniform numbers.**
+``` {r, include=TRUE}
+# Creating variable 1: 26 random uniform numbers
+my_unis <- runif(1:26)
+head(my_unis)
+
+# Creating variable 2: 26 capital letters
+my_letters <- LETTERS
+head(my_letters)
+
+# Creating the data set using the two variables created abvoe.
+my_df <- data.frame(my_unis, my_letters)
+
+# Selecting and 4 Random Values in Column 1 with NA
+my_df$my_unis[sample(nrow(my_df),4)]<-NA
+print(my_df)
+
+# Identify which rows received the NA
+which(is.na(my_df), arr.ind=TRUE)
+
+# Sort second variable alphabetically
+my_df[order(my_df$my_letters), 2]
+print(my_df)
+
+# Calculate the column mean of the first variable
+mean(my_df$my_unis, na.rm=TRUE)
+```
