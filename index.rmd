@@ -20,3 +20,5 @@ Link to [Homework 03](Homework_03.html)
 Link to [Homework 04](Homework_04.html)
 
 Link to [Homework 05](Homework_05.html)
+
+Link to [Homework 06](Homework_06.html)
