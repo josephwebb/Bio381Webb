@@ -1,0 +1,106 @@
+---
+title: "Homework_08"
+author: "Joe Webb"
+date: "3/16/2022"
+output: html_document
+---
+Return to [Homepage](index.html)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+```
+
+In this lab, students completed examples to simulate data. This data was modeled after 64 observations Acanthizidae egg mases. It should be noted, however, that 64 observation iss not enough to model consistent data. As a result, the modeled data will have a length of 250.
+
+The true data can be found here:  
+Rotenberry, John; Balasubramaniam, Priya (2020), Data from: Estimating egg mass-body mass relationships in birds, Dryad, Dataset, https://doi.org/10.6086/D16H37
+
+## Question 1
+Think about an ongoing study in your lab (or a paper you have read in a different class), and decide on a pattern that you might expect in your experiment if a specific hypothesis were true.
+
+> If the species withiin the Acanthizidae order have similar morphologies, than the mass of the eggs of the respective species should follow a normal distribution.
+
+## Question 2
+To start simply, assume that the data in each of your treatment groups follow a normal distribution. Specify the sample sizes, means, and variances for each group that would be reasonable if your hypothesis were true. You may need to consult some previous literature and/or an expert in the field to come up with these numbers.
+
+```{r}
+# The following information was derived from the base data set using Excel's function commands: =AVERAGE(), =VARPA()
+
+rawSize <- 250
+rawMean <- 1.8765625
+rawVariance <- 0.636875684
+rawSD <- rawVariance^2
+```
+
+## Question 3
+Using the methods we have covered in class, write code to create a random data set that has these attributes. Organize these data into a data frame with the appropriate structure.
+```{r}
+sim_ID <- runif(1:rawSize)
+sim_data <- rnorm(n = rawSize, mean = rawMean, sd = rawSD)
+sim_df <- data.frame(sim_ID, sim_data)
+head(sim_df)
+```
+
+## Question 4
+Now write code to analyze the data (probably as an ANOVA or regression analysis, but possibly as a logistic regression or contingency table analysis. Write code to generate a useful graph of the data.
+```{r}
+#Rearrange the dataframe for ANOVA
+longdf <- pivot_longer(sim_df, 
+                       cols=sim_ID:sim_data,
+                       names_to = "id",
+                       values_to = "data")
+
+#Summary to get the p-value
+summary(aov(sim_data ~ sim_ID, data = sim_df))
+
+#Create an appropriate histogram
+hist(x=sim_df$sim_data,
+     col = "lightblue",
+     main = paste("Histogram of Simulated Data"),
+     xlab= "Simulated Data Range")
+```
+
+## Question 5
+Try running your analysis multiple times to get a feeling for how variable the results are with the same parameters, but different sets of random numbers.
+
+*It would seem that the simulated data when n=64 does not consistently yield a p-value<0.05. As a result, future models should increasse the sample size. *
+
+
+## Question 6
+Now begin adjusting the means of the different groups. Given the sample sizes you have chosen, how small can the differences between the groups be (the “effect size”) for you to still detect a significant pattern (p < 0.05)?
+``` {r}
+newmean <- 1.50
+newData <- rnorm(n = rawSize, mean = newmean, sd = rawSD)
+newdf <- data.frame(sim_ID, newData)
+
+#Summary statistic of the dataframe created with the new mean value above, using the same contingent varaibles of the previous data table. 
+
+summary(aov(newData ~ sim_ID, data = newdf))
+
+```
+
+*In order for the data to retain a relatively consistent p-value less than 0.05, the mean value could not go below 1.5.*
+
+## Question 7
+Alternatively, for the effect sizes you originally hypothesized, what is the minimum sample size you would need in order to detect a statistically significant effect? Again, run the model a few times with the same parameter set to get a feeling for the effect of random variation in the data.
+``` {r}
+newSize <- 300
+newData <- rnorm(n = newSize, mean = rawMean, sd = rawSD)
+sim_ID <- runif(1:newSize)
+newdf <- data.frame(sim_ID, newData)
+
+#Summary statistic of the dataframe created with the new size value above, using the same contingent varaibles of the previous data table. 
+
+summary(aov(newData ~ sim_ID, data = newdf))
+```
+
+*Based off the simulated data, the statistical p-value is less random when size=300*
+
+## Question 8
+Write up your results in a markdown file, organized with headers and different code chunks to show your analysis. Be explicit in your explanation and justification for sample sizes, means, and variances.
+
+## Quesion 9
+If you have time, try repeating this exercise with one of the more sophisticated distributions, such as the gamma or negative binomial (depending on the kind of data you have). You will have to spend some time figuring out by trial and error the parameter values you will need to generate appropriate means and variances of the different groups.
+
