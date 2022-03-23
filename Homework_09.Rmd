@@ -1,0 +1,96 @@
+---
+title: "Homework_09"
+author: "Joe Webb"
+date: "3/23/2022"
+output: html_document
+---
+Return to [Homepage](index.html)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Homework 09
+In lab this week, students will be revising [Homework 08](Homework_08.html) using the principals of Structured Program to generate two new functions that analyze a simulated data set. 
+
+## Question 1
+Use the code that you worked on in Homework #8 (creating fake data sets), and re-organize it following the principles of structured programming. Do all the work in a single chunk in your R markdown file, just as if you were writing a single R script. Start with all of your annotated functions, preliminary calls, and global variables. The program body should be only a few lines of code that call the appropriate functions and run them in the correct order. Make sure that the output from one function serves as the input to the next. You can either daisy-chain the functions or write separate lines of code to hold elements in temporary variables and pass them along.
+
+```{r}
+# FUNCTION: analyze_data()
+# Generate a random normal distribution of a single variable and creates a histogram
+# Input: Size, Mean, Variance
+# Output: Histogram and Summary Statistic
+#---------------------------------------------------------------------
+# Preliminaries
+library(tidyverse)
+
+#---------------------------------------------------------------------
+# Anotated Function
+
+analyze_data <- function(size=250,mean=50,var=10) {
+  if(size < 1) {
+    return("Size must be greater than one")
+  } # end of size<1 if
+  
+    sim_ID <- runif(1:size)
+    sim_data <- rnorm(n=size,mean=mean,sd=var^2)
+    sim_df <- data.frame(sim_ID, sim_data)
+    
+  hist <- hist(x=sim_df$sim_data,
+     col = "lightblue",
+     main = paste("The Distribution of the Data"),
+     xlab= "Simulated Data Range")
+
+  ANOVA <- summary(aov(sim_data ~ sim_ID, data = sim_df))
+
+  return(ANOVA)
+}
+
+analyze_data()
+
+```
+
+## Question 2
+Once your code is up and working, modify your program to do something else: record a new summary variable, code a new statistical analysis, or create a different set of random variables or output graph. Do not rewrite any of your existing functions. Instead, copy them, rename them, and then modify them to do new things. Once your new functions are written, add some more lines of program code, calling a mixture of your previous functions and your new functions to get the job done.
+
+```{r}
+# FUNCTIONL: analyze_scatter()
+# Generate two sets of normal data and generate a scatter plot and report the slope of the line of best fit and p-value
+# Input: Size, Mean1, Mean2
+# Output: Scatter Plot & Slope of Line of Best Fit
+#---------------------------------------------------------------------
+# Preliminaries
+library(ggplot2)
+
+#---------------------------------------------------------------------
+# Anotated Function
+
+analyze_scatter <- function(size=100,mean1=10, mean2=20) {
+  if(size < 1) {
+    return("Size must be greater than one")
+  } # end of size<1 if
+    
+    sim.df <- data.frame(rnorm(n=size, mean=mean1),
+                         rnorm(n=size, mean=mean2))
+    names(sim.df)[1] <- "VarX"
+    names(sim.df)[2] <- "VarY"
+    
+    scatter <- ggplot2::qplot(x=sim.df$VarX,y=sim.df$VarY, 
+                              xlab = "Variable_X",
+                              ylab = "Variable_Y",
+                              main = "Scatterplot of Variable_X vs. Variable_Y")
+    
+    regression <- lm(sim.df$VarY~sim.df$VarX)
+    analysis <- c(slope=summary(regression)$coefficients[2,1],
+                pval=summary(regression)$coefficients[2,4])
+  
+  plot(scatter)
+  return(analysis)
+}
+
+analyze_scatter()
+
+```
+
+
+
