@@ -8,6 +8,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+Return to [Homepage](index.html)
+
 # Working with Dplyr
 In this lab, students would open and manipulate the iris dataset. 
 

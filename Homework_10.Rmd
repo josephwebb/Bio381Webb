@@ -1,0 +1,178 @@
+---
+title: "Homework_10"
+author: "Joe Webb"
+date: "3/30/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+Return to [Homepage](index.html)
+
+# For Loops and Randomized Tests
+In this lab, students will create their own `for` loops to calculate a variety of statistics as prompted.
+
+## Question 1
+Using a `for` loop, write a function to calculate the number of zeroes in a numeric vector. Before entering the loop, set up a counter variable `counter <- 0`. Inside the loop, add `1` to `counter` each time you have a zero in the matrix. Finally, use `return(counter)` for the output.
+
+```{r}
+##################################################
+# FUNCTION: count_zeroes()
+# Determines the number of zeroes in a numeric vector
+# input: x = name of numeric vector in question
+# output: counter = number of zeroes in vector
+#------------------------------------------------- 
+# Global variables
+counter <- 0
+x <- "numeric vector"
+#------------------------------------------------- 
+# Function
+count_zeroes <- function(x=c(0,1,2,3)) {
+  for(i in 1:length(vector)) {
+   if(x[i] == 0) {
+        counter <- counter+1
+   } # end of if
+   else {
+        next
+   } # end of else
+  } #end of for loop
+  print(counter)
+} # end of function
+
+#-------------------------------------------------
+# Example
+samplevec <- c(0,0,0,0,1,2,3,4,5,6)
+count_zeroes(x=samplevec)
+```
+
+## Question 2
+Use subsetting instead of a loop to rewrite the function as a single line of code.
+
+```{r}
+howmany_zeroes <- length(subset(samplevec, samplevec==0))
+print(howmany_zeroes)
+```
+
+## Question 3
+Write a function that takes as input two integers representing the number of rows and columns in a matrix. The output is a matrix of these dimensions in which each element is the product of the row number x the column number.
+
+```{r}
+##################################################
+# FUNCTION: multip_table()
+# Multiples column number by row number in each cell
+# input: nrow = number of rows
+#        ncol = number of columns
+# output: matrix of these dimensions, each cell product of input values
+#------------------------------------------------- 
+# Function body
+multip_table <- function(nrow=10,ncol=10) {
+                  seq.int(nrow) %o% 
+                  seq.int(ncol)
+}
+#------------------------------------------------- 
+# Example
+multip_table(nrow=8,ncol=8)
+```
+
+## Question 4
+In the next few lectures, you will learn how to do a randomization test on your data. We will complete some of the steps today to practice calling custom functions within a for loop. Use the code from the March 31st lecture (Randomization Tests) to complete the following steps:
+
+### Question 4a
+Simulate a dataset with 3 groups of data, each group drawn from a distribution with a different mean. The final data frame should have 1 column for group and 1 column for the response variable.
+
+```{r}
+# respoonse variables
+mean1 <- 5
+mean2 <- 10
+mean3 <- 15
+# Label groups of data
+group1 <-mean(rnorm(n=10,mean=mean1))
+group2 <-mean(rnorm(n=10,mean=mean2))
+group3 <-mean(rnorm(n=10,mean=mean3))
+
+#Create data frame
+groupnames <- c("Group1","Group2","Group3")
+response_variables <- c(group1,group2,group3)
+
+sim_dataset <- cbind(groupnames,response_variables)
+print(sim_dataset)
+```
+
+### Question 4b
+Write a custom function that 1) reshuffles the response variable, and 2) calculates the mean of each group in the reshuffled data. Store the means in a vector of length 3.
+
+```{r}
+##################################################
+# FUNCTION: shuffle_matrix()
+# Shuffles the inital mean values and prints the resulting matrix
+# input: mean1 = the mean of the first value
+#        mean2 = the mean of the second value
+#        mean3 = the mean of the third value
+# output: the corresponding matrix and vector of the means selected
+#------------------------------------------------- 
+# Function body
+
+shuffle_matrix <- function(mean1=5,mean2=10,mean3=15) {
+                  myvec <- c(mean1,mean2,mean3)
+                  group1 <-mean(rnorm(n=10,mean=mean1))
+                  group2 <-mean(rnorm(n=10,mean=mean2))
+                  group3 <-mean(rnorm(n=10,mean=mean3))
+                  
+                  response_variables <- c(group1,group2,group3)
+                  
+                  sim_dataset <- cbind(groupnames,response_variables)
+                  print(sim_dataset)
+                  print(myvec)
+}
+#------------------------------------------------- 
+# Example
+shuffle_matrix(mean1=10,mean2=20,mean3=30)
+```
+
+### Question 4c
+Use a for loop to repeat the function in b 100 times. Store the results in a data frame that has 1 column indicating the replicate number and 1 column for each new group mean, for a total of 4 columns.
+
+```{r}
+vectormeans <- NA
+vector1 <- NA
+vector2 <- NA
+vector3 <- NA
+
+matrixloop <- for(i in 1:100) {
+              mean1=runif(n=1, min=1, max=100)
+                  group1 <-mean(rnorm(n=10,mean=mean1))
+                  group2 <-mean(rnorm(n=10,mean=mean1))
+                  group3 <-mean(rnorm(n=10,mean=mean1))
+              
+                  vectormeans <- append(vectormeans,mean1)
+                  vector1 <- append(vector1,values=group1)
+                  vector2 <- append(vector2,values=group2)
+                  vector3 <- append(vector3,values=group3)
+}
+matrixloop <- cbind(vectormeans,vector1,vector2,vector3)
+
+head(matrixloop)
+```
+
+### Question 4d
+Use qplot() to create a histogram of the means for each reshuffled group. Or, if you want a challenge, use ggplot() to overlay all 3 histograms in the same figure. How do the distributions of reshuffled means compare to the original means?
+
+```{r}
+HistogramMeans<- ggplot() + aes(vectormeans)+ geom_histogram(aes=0.2, colour="black", fill="lightblue")
+
+Histogram1<- ggplot() + aes(vector1)+ geom_histogram(aes=0.2, colour="black", fill="limegreen")
+
+Histogram2<- ggplot() + aes(vector2)+ geom_histogram(aes=0.2, colour="black", fill="navyblue")
+
+Histogram3<- ggplot() + aes(vector3)+ geom_histogram(aes=0.2, colour="black", fill="purple")
+
+print(HistogramMeans)
+print(Histogram1)
+print(Histogram2)
+print(Histogram3)
+```
+
+

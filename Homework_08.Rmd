@@ -53,7 +53,7 @@ longdf <- pivot_longer(sim_df,
                        values_to = "data")
 
 #Summary to get the p-value
-summary(aov(sim_data ~ sim_ID, data = sim_df))
+  summary(aov(sim_data ~ sim_ID, data = sim_df))
 
 #Create an appropriate histogram
 hist(x=sim_df$sim_data,
