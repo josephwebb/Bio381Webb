@@ -1,0 +1,109 @@
+---
+title: "Homework 11"
+author: "Joe Webb"
+date: "4/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Return to [Homepage](index.html)
+
+# Batch Processing Existing Data
+
+In this lab, students explored the use of Batch Processing to quick analayze existing data sets.In the remaining, additional time was spent familiarizing themselves with subsetting and randomnization steps.
+
+**Disclaimer:** 
+*As an undergraduate student who has yet to have the opportunity to participate in research, I do not own a series of data to analyze through batch processing commands. As a result, 10 Random Data Files analyzing a hypothetical response between a "Control" and "Treatment" group were created prior to lab in a pre-existing folder. These files are called" SimData01-SimData10.*
+
+
+## Question 1
+Repeat the exercise from the Batch Processing Lecture (5 April), but do it using real data sets rather than purely simulated. Check with folks in your lab to see if there are multiple data sets available for analysis, or ask Nick, Lauren, or Emily for suggestions for other data sources. Stick to simple data analyses and graphics, but try to set it up as a batch process that will work on multiple files and save summary results to a common file.
+
+```{r}
+## The following function was retrieved from Nicholas Gotelli's BIO381 Online Lecture Notes: Batch Processing.
+
+#----------------------------------------------------------
+# FUNCTION reg_stats
+# description: fits linear models, extract model stats
+# inputs: 2-column data frame (x and y)
+# outputs: slope, p-vale, and r2
+###################################################
+reg_stats <- function(d=NULL) {
+            if(is.null(d)) {
+              x_var <- runif(10)
+              y_var <- runif(10)
+              d <- data.frame(x_var,y_var)
+            }
+  . <- lm(data=d,d[,2]~d[,1])
+  . <- summary(.)
+  stats_list <- list(Slope=.$coefficients[2,1],
+                     pVal=.$coefficients[2,4],
+                     r2=.$r.squared)
+  return(stats_list)
+}
+```
+
+
+```{r}
+
+# Batch Processing of Data Set
+######################################
+# Global Variables
+n_files=10
+file_names <- list.files(path="SimBatchData/")
+file_produced <- "SimuStatistics.csv"
+
+####################################
+# Preliminary Data Frame Creation
+ID <- seq_along(file_names)
+file_name <- file_names
+slope <- rep(NA,n_files)
+p_val <- rep(NA,n_files)
+r2 <- rep(NA,n_files)
+
+stats_out <- data.frame(ID,file_name,slope,p_val,r2)
+
+#######################################
+# Batch Processing (10) Files
+
+for (i in 1:n_files) {
+  data <- read.table(file=paste("SimBatchData/",file_names[i],
+                                sep=""),
+                      sep=",",
+                      header=TRUE)
+  
+  . <- reg_stats(data) # pull out regression stats from file
+  stats_out[i,3:5] <- unlist(.) #unlist, copy into last 3 columns
+}
+########################################
+# Creating Summary File
+# Generating Metadata
+write.table(cat("# Summary stats for ",
+                "batch processing of simulated data",
+                "\n",
+                "#timestamp: ", as.character(Sys.time()), 
+                "\n",
+                file=file_produced,
+                row.names="",
+                col.names="",
+                sep=""))
+
+# Incorporating Data
+write.table(x=stats_out,
+            file=file_produced,
+            row.names=FALSE,
+            col.names=TRUE,
+            sep=",",
+            append=TRUE)
+
+```
+
+## Question 2
+Use the remainder of the lab period to continue work on Homework 10, if you did not complete it last week:
+
+**This work has been added to the [Homework 10](Homework_10.html)**
+
+

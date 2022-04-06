@@ -27,11 +27,11 @@ Using a `for` loop, write a function to calculate the number of zeroes in a nume
 #------------------------------------------------- 
 # Global variables
 counter <- 0
-x <- "numeric vector"
+sim.vec <- c(0,0,1,2,3,4)
 #------------------------------------------------- 
 # Function
-count_zeroes <- function(x=c(0,1,2,3)) {
-  for(i in 1:length(vector)) {
+count_zeroes <- function(x=sim.vec) {
+  for(i in 1:length(sim.vec)) {
    if(x[i] == 0) {
         counter <- counter+1
    } # end of if
@@ -44,7 +44,7 @@ count_zeroes <- function(x=c(0,1,2,3)) {
 
 #-------------------------------------------------
 # Example
-samplevec <- c(0,0,0,0,1,2,3,4,5,6)
+samplevec <- c(0,0,0,1,2,3,4,5,6)
 count_zeroes(x=samplevec)
 ```
 
@@ -77,7 +77,7 @@ multip_table <- function(nrow=10,ncol=10) {
 multip_table(nrow=8,ncol=8)
 ```
 
-## Question 4
+## Question 4 (Prior to Randomization Tests Lecture) 
 In the next few lectures, you will learn how to do a randomization test on your data. We will complete some of the steps today to practice calling custom functions within a for loop. Use the code from the March 31st lecture (Randomization Tests) to complete the following steps:
 
 ### Question 4a
@@ -161,18 +161,135 @@ head(matrixloop)
 Use qplot() to create a histogram of the means for each reshuffled group. Or, if you want a challenge, use ggplot() to overlay all 3 histograms in the same figure. How do the distributions of reshuffled means compare to the original means?
 
 ```{r}
-HistogramMeans<- ggplot() + aes(vectormeans)+ geom_histogram(aes=0.2, colour="black", fill="lightblue")
+HistogramMeans<- ggplot() + aes(vectormeans) + geom_histogram(aes=0.2, colour="black", fill="lightblue")
 
-Histogram1<- ggplot() + aes(vector1)+ geom_histogram(aes=0.2, colour="black", fill="limegreen")
+Histogram1<- ggplot() + aes(vector1) + geom_histogram(aes=0.2, colour="black", fill="limegreen")
 
-Histogram2<- ggplot() + aes(vector2)+ geom_histogram(aes=0.2, colour="black", fill="navyblue")
+Histogram2<- ggplot() + aes(vector2) + geom_histogram(aes=0.2, colour="black", fill="navyblue")
 
-Histogram3<- ggplot() + aes(vector3)+ geom_histogram(aes=0.2, colour="black", fill="purple")
+Histogram3<- ggplot() + aes(vector3) + geom_histogram(aes=0.2, colour="black", fill="purple")
 
 print(HistogramMeans)
 print(Histogram1)
 print(Histogram2)
 print(Histogram3)
 ```
+
+## Question 4 (After Randomization Lecture)
+Use the code from the upcoming April 2nd lecture (Randomization Tests) to design and conduct a randomization test for some of your own data. You will need to modify the functions that read in the data, calculate the metric, and randomize the data. Once those are set up, the program should run correctly calling your new functions. Also, to make your analysis fully repeatable, make sure you set the random number seed at the beginning (use either `set.seed()` in base R, or `char2seed` in the `TeachingDemos` package
+
+```{r}
+# The following function has been retrieved from Nicholas Gotelli's Bio381 Randomization Tests Lecture. 
+
+# FUNCTION read_data
+# description: read in (or generate) data set for analysis
+# inputs: file name (or nothing, as in this demo)
+# outputs: 3 column data frame of observe data (ID, x, y)
+##########################################
+read_data <- function(z=NULL) {
+          if(is.null(z)) {
+                x_obs <- 1:20
+                y_obs <- x_obs + 10*rnorm(20)
+                df <- data.frame(ID=seq_along(x_obs),
+                                 x_obs,
+                                 y_obs)}
+  
+          return(df)
+} # end of read_data
+# -------------------------------
+# -------------------------------
+# FUNCTION get_metric
+# description: calculate metric for randomization test
+# inputs: 2-column data frame for regression
+# outputs: regression slope
+##########################################
+get_metric <- function(z=NULL) {
+        if(is.null(z)){
+          x_obs <- 1:20
+          y_obs <- x_obs +10*rnorm(20)
+          z <- data.frame(ID=seq_along(x_obs),
+                          x_obs,
+                          y_obs)}
+        . <- lm(z[,3]~z[,2])
+        . <- summary(.)
+        . <- .$coefficients[2,1]
+        slope <- .
+        
+        return(slope)
+        
+}
+# -------------------------------
+# -------------------------------
+# FUNCTION shuffle_data
+# description: randomize data foor regression analysis
+# inputs: 3 column data frame (ID, xvar, yvar)
+# outputs: 3 column data frame (ID, xvar, yvar)
+##########################################
+shuffle_data <- function(z=NULL) {
+                if(is.null(z)){
+                    x_obs <- 1:20
+                    y_obs <- x_obs + 10*rnorm(20)
+                    z <- data.frame(ID=seq_along(x_obs),
+                                    x_obs,
+                                    y_obs)}
+                z[,3] <- sample(z[,3])
+
+return(z)
+}
+# -------------------------------
+# -------------------------------
+# FUNCTION get_pval
+# description: calculate p value from simulation
+# inputs: list of observed metric and vector of simulated metrics
+# outputs: lower and upper tail probability value
+##########################################
+get_pval <- function(z=NULL) {
+          if(is.null(z)){
+              z <- list(rnorm(1),rnorm(1000)) }
+          p_lower <- mean(z[[2]]<=z[[1]])
+          p_upper <- mean(z[[2]]>=z[[1]])
+
+          return(c(pL=p_lower,pU=p_upper))
+          }
+#---------------------------------------
+# -------------------------------
+# FUNCTION plot_ran_test
+# description: create a ggplot of histogram of simulated values
+# inputs: list of observed metric and vector of simulated metrics
+# outputs: saved ggplot graph
+##########################################
+plot_ran_test <- function(z=NULL) {
+            if(is.null(z)) {
+                  z <- list(rnorm(1),rnorm(1000)) }
+            df <- data.frame(ID=seq_along(z[[2]]), sim_x=z[[2]])
+            p1 <- ggplot(data=df, mapping=aes(x=sim_x))
+            p1 + geom_histogram(mapping=aes(fill=I("goldenrod"),
+                                            color=I("black"))) +
+              geom_vline(aes(xintercept=z[[1]],col="blue"))
+    
+            }
+#--------------------------------
+#############################################
+```
+
+```{r}
+## Apply Randomization Functions
+sim_length <- 1000
+sim_vector <- rep(NA,sim_length)
+df <- read_data() # retrieve simulated data
+x_obs <- get_metric(df) #get slope of observed data
+
+for (i in seq_len(sim_length)) {
+  sim_vector[i] <- get_metric(shuffle_data(df))
+}
+
+slopes <- list(x_obs,sim_vector)
+get_pval(slopes)
+plot_ran_test(slopes)
+
+```
+
+
+
 
 
