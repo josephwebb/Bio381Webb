@@ -1,0 +1,71 @@
+---
+title: "Homework_12"
+author: "Joe Webb"
+date: "4/13/2022"
+output: html_document
+---
+Return to [Homepage](index.html)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(ggthemes)
+```
+
+# Personal ggplot Practice
+In this lab, students either took personal data or used preexisting R data sets to generate a beautiful graph using the `ggplot` toolset. As an undergraduate student without personal data, the `iris` pre-installed r dataset was used. 
+
+## Question 1
+For this exercise, use your newly-developed ggplot chops to create some nice graphs from your own data (If you do not have a good data frame to use for graphics, use one of the many built-in data frames from R (other than mpg, which we are using in class)). Experiment with different themes, theme base sizes, aesthetics, mappings, and faceting. When you are finished, try exporting them to high quality pdfs, jpgs, eps files, or other formats that you would use for submission to a journal.
+
+```{r}
+# Assigning the iris dataframe to the variable: data
+sim_data <- iris
+#head(data)
+```
+
+**Now to create a graph.** I chose to create a scatterplot of Petal.Length and Petal.Width.
+
+```{r}
+# The annotated graph was created using the ggplot and ggthemes packages.
+graph <- qplot(data=sim_data, x=Petal.Length, y=Petal.Width, 
+               geom="point") +
+               geom_point(size=4, shape = 21, 
+                                    color="black",fill="cornflowerblue") + 
+               geom_smooth(method='lm', 
+                           formula= y~x,
+                           color="black", 
+                           size=0.75) +
+               labs(title="Comparing Petal Length with Petal Width",
+                    subtitle="An analysis of Acer saccharum leaves in Burlington, VT",
+                    x= "Petal Length (cm)",
+                    y= "Petal Width (cm)") +
+              
+                theme_bw()
+
+print(graph)
+```
+
+In the extra time of lab, I attempted to create a jittter graph with the individual species.
+```{r}
+graph2 <- ggplot() + 
+          geom_jitter(data=sim_data,
+                      mapping=aes(x=Species, y=Petal.Length, col=Species), 
+                      size=2, 
+                      position=position_jitter(width=0.35, height=0)) +
+          labs(title="Petal Length of Individual Species",
+               subtitle = "An analysis of the petal lengths of setosa, versicolor, and virginica species",
+               x= "Species",
+               y= "Petal Length (cm)") +
+              
+          theme_igray()
+
+print(graph2)
+```
+
+
+
+
+
+
+
