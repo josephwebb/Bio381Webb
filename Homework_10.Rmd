@@ -89,12 +89,12 @@ mean1 <- 5
 mean2 <- 10
 mean3 <- 15
 # Label groups of data
-group1 <-mean(rnorm(n=10,mean=mean1))
-group2 <-mean(rnorm(n=10,mean=mean2))
-group3 <-mean(rnorm(n=10,mean=mean3))
+group1 <-rnorm(n=10,mean=mean1)
+group2 <-rnorm(n=10,mean=mean2)
+group3 <-rnorm(n=10,mean=mean3)
 
 #Create data frame
-groupnames <- c("Group1","Group2","Group3")
+groupnames <- c("A","B","C")
 response_variables <- c(group1,group2,group3)
 
 sim_dataset <- cbind(groupnames,response_variables)
@@ -117,62 +117,60 @@ Write a custom function that 1) reshuffles the response variable, and 2) calcula
 
 shuffle_matrix <- function(mean1=5,mean2=10,mean3=15) {
                   myvec <- c(mean1,mean2,mean3)
-                  group1 <-mean(rnorm(n=10,mean=mean1))
-                  group2 <-mean(rnorm(n=10,mean=mean2))
-                  group3 <-mean(rnorm(n=10,mean=mean3))
+                  groupnames <- c("A","B","C")
+                  group1 <-rnorm(n=10,mean=mean1)
+                  group2 <-rnorm(n=10,mean=mean2)
+                  group3 <-rnorm(n=10,mean=mean3)
                   
                   response_variables <- c(group1,group2,group3)
                   
-                  sim_dataset <- cbind(groupnames,response_variables)
+                  sim_dataset <- cbind(groupnames, response_variables)
                   print(sim_dataset)
                   print(myvec)
 }
 #------------------------------------------------- 
 # Example
 shuffle_matrix(mean1=10,mean2=20,mean3=30)
+
 ```
 
 ### Question 4c
 Use a for loop to repeat the function in b 100 times. Store the results in a data frame that has 1 column indicating the replicate number and 1 column for each new group mean, for a total of 4 columns.
 
 ```{r}
-vectormeans <- NA
-vector1 <- NA
-vector2 <- NA
-vector3 <- NA
+library(dplyr)
+library(tidyr)
 
-matrixloop <- for(i in 1:100) {
-              mean1=runif(n=1, min=1, max=100)
-                  group1 <-mean(rnorm(n=10,mean=mean1))
-                  group2 <-mean(rnorm(n=10,mean=mean1))
-                  group3 <-mean(rnorm(n=10,mean=mean1))
-              
-                  vectormeans <- append(vectormeans,mean1)
-                  vector1 <- append(vector1,values=group1)
-                  vector2 <- append(vector2,values=group2)
-                  vector3 <- append(vector3,values=group3)
+results <- data.frame()
+  
+for(i in 1:100){
+  shuffle <- sample(1:nrow(sim_dataset), replace=FALSE)
+    data_frame_shuffle <- data.frame(groupnames, shuffle)
+  sum_mean <- data_frame_shuffle %>% group_by(groupnames) %>%    
+    summarise(mean = mean(shuffle))
+  df1 <- sum_mean %>% pivot_wider(names_from = groupnames, values_from = mean)
+  final_df <- cbind(i, df1)
+  
+  results <- rbind(results, final_df)
 }
-matrixloop <- cbind(vectormeans,vector1,vector2,vector3)
 
-head(matrixloop)
+print(results)
 ```
 
 ### Question 4d
 Use qplot() to create a histogram of the means for each reshuffled group. Or, if you want a challenge, use ggplot() to overlay all 3 histograms in the same figure. How do the distributions of reshuffled means compare to the original means?
 
 ```{r}
-HistogramMeans<- ggplot() + aes(vectormeans) + geom_histogram(aes=0.2, colour="black", fill="lightblue")
+longdf <- results %>%
+  pivot_longer(cols = 2:4,
+               names_to = "group",
+               values_to = "means")
 
-Histogram1<- ggplot() + aes(vector1) + geom_histogram(aes=0.2, colour="black", fill="limegreen")
+# head(longdf)
 
-Histogram2<- ggplot() + aes(vector2) + geom_histogram(aes=0.2, colour="black", fill="navyblue")
-
-Histogram3<- ggplot() + aes(vector3) + geom_histogram(aes=0.2, colour="black", fill="purple")
-
-print(HistogramMeans)
-print(Histogram1)
-print(Histogram2)
-print(Histogram3)
+ggplot(data = longdf, 
+       aes(x = means, fill = group, color = group)) +
+       geom_histogram(position = "dodge", alpha = 0.3)
 ```
 
 ## Question 4 (After Randomization Lecture)
